@@ -2,7 +2,7 @@
 all: build
 
 build:
-	docker build -t jimpick/lotus-fvm-localnet .
+	DOCKER_BUILDKIT=1 docker build --progress=plain -t jimpick/lotus-fvm-localnet .
 
 run:
 	docker rm localnet

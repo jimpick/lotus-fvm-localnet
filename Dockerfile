@@ -28,7 +28,8 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN mkdir /home/ubuntu
 WORKDIR /home/ubuntu
-COPY . .
+COPY .git /home/ubuntu/.git
+COPY lotus /home/ubuntu/lotus
 RUN ls -l
 
 RUN chown -R ubuntu. /home/ubuntu

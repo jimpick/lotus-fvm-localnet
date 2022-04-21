@@ -28,15 +28,14 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN mkdir /home/ubuntu
 WORKDIR /home/ubuntu
-COPY .git /home/ubuntu/.git
-COPY lotus /home/ubuntu/lotus
-RUN ls -l
+COPY . .
+RUN ls -al
 
 RUN chown -R ubuntu. /home/ubuntu
 USER ubuntu
 
 WORKDIR /home/ubuntu/lotus
-RUN ls -l
+RUN ls -al
 
 # https://lotus.filecoin.io/developers/local-network/
 

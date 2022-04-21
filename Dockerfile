@@ -26,16 +26,13 @@ RUN echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
 
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-RUN mkdir /home/ubuntu
 WORKDIR /home/ubuntu
 COPY . .
-RUN ls -al
 
 RUN chown -R ubuntu. /home/ubuntu
 USER ubuntu
 
 WORKDIR /home/ubuntu/lotus
-RUN ls -al
 
 # https://lotus.filecoin.io/developers/local-network/
 
@@ -45,9 +42,7 @@ ENV LOTUS_SKIP_GENESIS_CHECK=_yes_
 ENV CGO_CFLAGS_ALLOW="-D__BLST_PORTABLE__"
 ENV CGO_CFLAGS="-D__BLST_PORTABLE__"
 
-RUN pwd
-RUN ls -l
 RUN make clean 2k
-RUN ./lotus fetch-params 2048
-RUN ./lotus-seed pre-seal --sector-size 2KiB --num-sectors 2
-RUN ./lotus-seed genesis new localnet.json
+#RUN ./lotus fetch-params 2048
+#RUN ./lotus-seed pre-seal --sector-size 2KiB --num-sectors 2
+#RUN ./lotus-seed genesis new localnet.json

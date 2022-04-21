@@ -43,6 +43,6 @@ ENV CGO_CFLAGS_ALLOW="-D__BLST_PORTABLE__"
 ENV CGO_CFLAGS="-D__BLST_PORTABLE__"
 
 RUN make clean 2k
-#RUN ./lotus fetch-params 2048
-#RUN ./lotus-seed pre-seal --sector-size 2KiB --num-sectors 2
-#RUN ./lotus-seed genesis new localnet.json
+RUN ./lotus fetch-params 2048
+RUN ./lotus-seed pre-seal --sector-size 2KiB --num-sectors 2
+RUN ./lotus-seed genesis new localnet.json

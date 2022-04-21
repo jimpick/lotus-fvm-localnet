@@ -48,8 +48,8 @@ jobs:
         run: |
           # https://github.community/t/how-to-check-if-a-container-image-exists-on-ghcr/154836
           TOKEN=$(curl -s https://ghcr.io/token\?scope\="repository:jimpick/lotus-fvm-localnet:pull" | jq -r .token)
-          # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/jimpick/lotus-fvm-localnet/manifests/jimpick-github-actions
-          DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/jimpick/lotus-fvm-localnet/manifests/jimpick-github-actions | sed -n 's/^docker-content-digest: //p')
+          # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/jimpick/lotus-fvm-localnet/manifests/main
+          DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/jimpick/lotus-fvm-localnet/manifests/main | sed -n 's/^docker-content-digest: //p')
           echo $DIGEST
           echo "::set-output name=digest::$DIGEST"
 

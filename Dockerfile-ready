@@ -1,0 +1,36 @@
+# syntax=docker/dockerfile:1.4
+
+# See: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md
+
+FROM ghcr.io/jimpick/lotus-fvm-localnet-base@sha256:8a510bc09a1b812d55f1c63b75f5c93f21f4d6344a1c8995df87189ead22c592
+
+# Setup Lotus - https://lotus.filecoin.io/developers/local-network/
+
+RUN ./lotus-seed pre-seal --sector-size 2KiB --num-sectors 2
+RUN ./lotus-seed genesis new localnet.json
+RUN ./lotus-seed genesis add-miner localnet.json ~/.genesis-sectors/pre-seal-t01000.json
+
+RUN <<'eot' bash
+       # Start node
+
+       stdbuf -o0 ./lotus daemon --lotus-make-genesis=devgen.car --genesis-template=localnet.json --bootstrap=false 2>&1  | sed 's/^/[node] /' &
+       NODE_PID=$!
+       echo Node PID: $NODE_PID
+
+       # Setup miner
+	
+       sleep 5
+       ./lotus wallet import --as-default ~/.genesis-sectors/pre-seal-t01000.key
+
+       ./lotus-miner init \
+	  --genesis-miner \
+          --actor=t01000 \
+          --sector-size=2KiB \
+          --pre-sealed-sectors=~/.genesis-sectors \
+          --pre-sealed-metadata=~/.genesis-sectors/pre-seal-t01000.json \
+          --nosync
+       echo Done miner init.
+       kill $NODE_PID
+eot
+
+

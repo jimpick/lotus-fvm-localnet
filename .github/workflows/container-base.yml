@@ -47,8 +47,8 @@ jobs:
         run: |
           # https://github.community/t/how-to-check-if-a-container-image-exists-on-ghcr/154836
           TOKEN=$(curl -s https://ghcr.io/token\?scope\="repository:${{ env.IMAGE_NAME }}:pull" | jq -r .token)
-          # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/${{ github.ref_name }}
-          DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/${{ github.ref_name }} | sed -n 's/^docker-content-digest: //p')
+          # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest
+          DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest | sed -n 's/^docker-content-digest: //p')
           echo $DIGEST
           echo "::set-output name=digest::$DIGEST"
 

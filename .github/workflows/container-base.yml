@@ -1,0 +1,58 @@
+name: lotus-fvm-localnet-base
+
+on:
+  push:
+    paths:
+      - .github/workflows/container-base.yml
+      - Dockerfile-base
+      - lotus
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: jimpick/lotus-fvm-localnet-base
+
+jobs:
+  run-build-and-push-oci-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.fetch_digest.outputs.digest }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: build-base
+        run: make build-base
+
+      - name: Tag Docker image
+        run: docker image tag ${{ env.IMAGE_NAME }} ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}
+
+      - name: Push Docker image
+        run: docker image push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Fetch digest
+        id: fetch_digest
+        run: |
+          # https://github.community/t/how-to-check-if-a-container-image-exists-on-ghcr/154836
+          TOKEN=$(curl -s https://ghcr.io/token\?scope\="repository:${{ env.IMAGE_NAME }}:pull" | jq -r .token)
+          # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/${{ github.ref_name }}
+          DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/${{ github.ref_name }} | sed -n 's/^docker-content-digest: //p')
+          echo $DIGEST
+          echo "::set-output name=digest::$DIGEST"
+
+      - name: Outputs
+        run: |
+          echo digest: ${{ steps.fetch_digest.outputs.digest }}
+

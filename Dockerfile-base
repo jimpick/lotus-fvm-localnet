@@ -49,3 +49,7 @@ ENV PATH="/home/ubuntu/lotus:${PATH}"
 
 RUN make clean 2k
 
+# Fetch params
+
+RUN ./lotus fetch-params 2048
+

@@ -6,7 +6,7 @@ build: build-base
 .PHONY: all build run
 
 build-base:
-	DOCKER_BUILDKIT=1 docker build -f Dockerfile --progress=plain -t jimpick/lotus-fvm-localnet-base .
+	DOCKER_BUILDKIT=1 docker build -f Dockerfile-base --progress=plain -t jimpick/lotus-fvm-localnet-base .
 
 run:
 	docker rm localnet

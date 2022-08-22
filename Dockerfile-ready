@@ -11,6 +11,7 @@ RUN ./lotus-seed genesis new localnet.json
 RUN ./lotus-seed genesis add-miner localnet.json ~/.genesis-sectors/pre-seal-t01000.json
 
 RUN <<'eot' bash
+       set -e
        # Start node
 
        stdbuf -o0 ./lotus daemon --lotus-make-genesis=devgen.car --genesis-template=localnet.json --bootstrap=false 2>&1  | sed 's/^/[node] /' &
@@ -19,7 +20,8 @@ RUN <<'eot' bash
 
        # Setup miner
 	
-       sleep 5
+       sleep 10 
+       ./lotus wait-api
        ./lotus wallet import --as-default ~/.genesis-sectors/pre-seal-t01000.key
 
        ./lotus-miner init \

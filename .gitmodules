@@ -2,3 +2,6 @@
 	path = lotus
 	url = https://github.com/filecoin-project/lotus.git
 	branch = experimental/fvm-m2
+[submodule "go-jsonrpc"]
+	path = go-jsonrpc
+	url = https://github.com/jimpick/go-jsonrpc.git

@@ -45,6 +45,10 @@ ENV CGO_CFLAGS="-D__BLST_PORTABLE__"
 
 ENV PATH="/home/ubuntu/lotus:${PATH}"
 
+# Patch go.mod to use go-jsonrpc with extra API request logging
+
+RUN echo 'replace	github.com/filecoin-project/go-jsonrpc  => ../go-jsonrpc' >> go.mod
+
 # Build Lotus
 
 RUN make clean 2k

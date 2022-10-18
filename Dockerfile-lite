@@ -1,0 +1,46 @@
+# syntax=docker/dockerfile:1.4
+
+# See: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md
+
+FROM ghcr.io/jimpick/lotus-fvm-localnet-ready@sha256:6565d1ca810b94cbee1bef331b8b1dddbc8efa757810cddfe2501784b64bcc8c as build
+
+USER root
+
+WORKDIR /home/ubuntu/lotus
+
+RUN make install
+
+# Copy to new image
+
+FROM ubuntu
+
+RUN useradd ubuntu
+
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+
+RUN apt install -y mesa-opencl-icd jq curl hwloc 
+RUN apt install -y vim less htop
+
+RUN apt upgrade -y
+
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+WORKDIR /home/ubuntu
+
+COPY --from=build /usr/local /usr/local
+COPY --from=build /home/ubuntu/.genesis-sectors /home/ubuntu/.genesis-sectors
+COPY --from=build /home/ubuntu/.lotus-local-net /home/ubuntu/.lotus-local-net
+COPY --from=build /home/ubuntu/.lotus-miner-local-net /home/ubuntu/.lotus-miner-local-net
+COPY --from=build /var/tmp/filecoin-proof-parameters /var/tmp/filecoin-proof-parameters
+COPY --from=build /var/tmp/filecoin-parents /var/tmp/filecoin-proof-parents
+
+RUN chown -R ubuntu. /home/ubuntu
+USER ubuntu
+
+ENV LOTUS_PATH="~/.lotus-local-net"
+ENV LOTUS_MINER_PATH="~/.lotus-miner-local-net"
+ENV LOTUS_SKIP_GENESIS_CHECK=_yes_
+
+EXPOSE 1234
+EXPOSE 2345

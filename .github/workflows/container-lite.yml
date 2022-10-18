@@ -49,9 +49,9 @@ jobs:
           # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest
           DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest | sed -n 's/^docker-content-digest: //p')
           echo $DIGEST
-          echo "::set-output name=digest::$DIGEST"
+          echo "digest=$DIGEST" >> $GITHUB_ENV
 
       - name: Outputs
         run: |
-          echo digest: ${{ steps.fetch_digest.outputs.digest }}
+          echo digest: ${{ env.digest }}
 

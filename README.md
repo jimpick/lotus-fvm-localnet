@@ -100,4 +100,3 @@ These should work with this localnet.
 # License
 
 Apache 2 or MIT
-

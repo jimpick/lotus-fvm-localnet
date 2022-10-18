@@ -27,7 +27,7 @@ jobs:
           submodules: recursive
 
       - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        uses: docker/login-action@v2.1.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -50,9 +50,9 @@ jobs:
           # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest
           DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest | sed -n 's/^docker-content-digest: //p')
           echo $DIGEST
-          echo "::set-output name=digest::$DIGEST"
+          echo "digest=$DIGEST" >> $GITHUB_ENV
 
       - name: Outputs
         run: |
-          echo digest: ${{ steps.fetch_digest.outputs.digest }}
+          echo digest: ${{ env.digest }}
 

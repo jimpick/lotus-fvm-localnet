@@ -28,7 +28,7 @@ the "Building Images" section below.
 Run the node:
 
 ```
-docker run -i -t --rm --name lotus-fvm-localnet ghcr.io/jimpick/lotus-fvm-localnet-lite:latest lotus daemon --lotus-make-genesis=devgen.car --genesis-template=localnet.json --bootstrap=false
+docker run -p 1234:1234 -i -t --rm --name lotus-fvm-localnet ghcr.io/jimpick/lotus-fvm-localnet-lite:latest lotus daemon --lotus-make-genesis=devgen.car --genesis-template=localnet.json --bootstrap=false
 ```
 
 In another terminal, run the miner:
@@ -43,8 +43,69 @@ Watch the chain progress:
 docker exec -it lotus-fvm-localnet watch lotus chain list --count=3
 ```
 
-It's a really heavy Ubuntu-based image with the full source and lots of tools, eg. `tmux`. You can use additional Docker
-options to expose ports to your development host, etc.
+Access the JSON-RPC API on the node using CURL:
+
+```
+$ curl -s -X POST -H "Content-Type: application/json" --data '{ "jsonrpc": "2.0", "method": "Filecoin.ChainHead", "params": [], "id": 1 }' http://127.0.0.1:1234/rpc/v0 | jq
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "Cids": [
+      {
+        "/": "bafy2bzacecjp2ovazcmaujizsmnrekde5rqeadjaykpzetvzsw7mf2s33xmi6"
+      }
+    ],
+    "Blocks": [
+      {
+        "Miner": "t01000",
+        "Ticket": {
+          "VRFProof": "p2w665bgCcyXBAlB3KAQZV/BxEVBASYliPvCefmzRGIuYNMT65Z+pVmblhTUhP3QBZwne9sJAUZ7g955ATwHo8cpC3rgmej0vz9iCfqv+vpIinZklywRh3nBJ40xz9Rl"
+        },
+        "ElectionProof": {
+          "WinCount": 7,
+          "VRFProof": "lcaJloFrr6l+fKnZb3UW1EELJDHALTNHG9HE8eDAtJ0NBSimQh4xURmCx4iWLQkMDrTB2O+l++dcxgASxlM9lZnD+f1CkzcJ5KEWgPZYRwh3dmoRs9DAwsZXV1/T5tOh"
+        },
+        "BeaconEntries": null,
+        "WinPoStProof": [
+          {
+            "PoStProof": 0,
+            "ProofBytes": "uHFisqy0U48VZb9NoHnHIGdxSpkIibbVjerfBivPZdPBU2WQ6gh9NSKvqUW2W9aGkvOGkH5HPFZZ9jh8ZXJtf6Ubbmj+WGK16VShSXuCUGd6ysLgoKni+z1dcj5Q9X7ZCbh7SqON2yT8sMw8c3uqhka50zdb7fZZ+eaMb3SKHJpKSiLL2+Mzwc1L44P4yjdlpErxnTePte86rt97+ShWUtcyySph0heGbQk4gt/QMcAyAHF1qEhLcacLrxDEYg80"
+          }
+        ],
+        "Parents": [
+          {
+            "/": "bafy2bzacea66mb76bz2m45yklsxrzggs7bbwafvnkshc6rr4dy3vuobvgxafs"
+          }
+        ],
+        "ParentWeight": "626304",
+        "Height": 109,
+        "ParentStateRoot": {
+          "/": "bafy2bzacebx7ho2vt6wutvwi4oejor3u6l4b5w5xfic6cm7tgxwu5j44xp4aw"
+        },
+        "ParentMessageReceipts": {
+          "/": "bafy2bzacedswlcz5ddgqnyo3sak3jmhmkxashisnlpq6ujgyhe4mlobzpnhs6"
+        },
+        "Messages": {
+          "/": "bafy2bzacecmda75ovposbdateg7eyhwij65zklgyijgcjwynlklmqazpwlhba"
+        },
+        "BLSAggregate": {
+          "Type": 2,
+          "Data": "wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        "Timestamp": 1666121874,
+        "BlockSig": {
+          "Type": 2,
+          "Data": "tXc3jZEXTau5MU4XtF39bpadEocCxqM4coSuPuAilf0MfH45jwRGF7uochua9QgxCdzfWjVqBlb4Oi7QeBQZFO6YNrVDG1AyNa2oP7jU8vvFTkEHFgq1gnc28ReSttXz"
+        },
+        "ForkSignaling": 0,
+        "ParentBaseFee": "100"
+      }
+    ],
+    "Height": 109
+  },
+  "id": 1
+}
+```
 
 # Usage: Kubernetes
 
@@ -80,13 +141,6 @@ spec:
 This just uses ephemeral storage on the root overlay filesystem, which will be lost after
 the pod is terminated.
 
-
-# Example Actors
-
-These should work with this localnet.
-
-* https://github.com/raulk/fil-hello-world-actor
-* https://github.com/jimpick/fvm-hanoi-actor-1
 
 # Building Images
 

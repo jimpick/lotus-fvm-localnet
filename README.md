@@ -15,29 +15,20 @@ This is the branch of Lotus with experimental FVM "smart contract" support:
 
 # Built images
 
-The image is built using GitHub Actions. 
+The "lite" image is an image based on Ubuntu with just the Lotus binaries
+and a bootstrapped chain + proofs.
 
-* https://github.com/jimpick/lotus-fvm-localnet/actions/workflows/container-ready.yml
+* Docker Image: https://github.com/jimpick/lotus-fvm-localnet/pkgs/container/lotus-fvm-localnet-lite
 
-The image is uploaded to the GitHub Container registry and can be referred to as:
-
-* `ghcr.io/jimpick/lotus-fvm-localnet-ready:latest`
-
-Or, even better, get the latest digest hash from the action to refer to an immutable
-version, eg.:
-
-* `ghcr.io/jimpick/lotus-fvm-localnet-ready@sha256:f181f34189fd9b4ec7e3690ceca2c7d3d620a3fa9c9a06fb766049742d58b161`
-
-The image is built in two stages. There is another image `jimpick/lotus-fvm-localnet-base`
-that just contains the built version of Lotus and the downloaded params, but hasn't
-been bootstrapped with genesis/sectors yet.
+For information about the intermediate Docker images used in the build, see
+the "Building Images" section below.
 
 # Usage: Docker
 
 Run the node:
 
 ```
-docker run -i -t --rm --name lotus-fvm-localnet ghcr.io/jimpick/lotus-fvm-localnet-ready:latest lotus daemon --lotus-make-genesis=devgen.car --genesis-template=localnet.json --bootstrap=false
+docker run -i -t --rm --name lotus-fvm-localnet ghcr.io/jimpick/lotus-fvm-localnet-lite:latest lotus daemon --lotus-make-genesis=devgen.car --genesis-template=localnet.json --bootstrap=false
 ```
 
 In another terminal, run the miner:
@@ -68,14 +59,14 @@ spec:
   restartPolicy: Always
   containers:
   - name: node
-    image: ghcr.io/jimpick/lotus-fvm-localnet-ready@sha256:f181f34189fd9b4ec7e3690ceca2c7d3d620a3fa9c9a06fb766049742d58b161
+    image: ghcr.io/jimpick/lotus-fvm-localnet-lite@latest
     command: [ bash, -c ]
     args:
       - |
         lotus daemon --lotus-make-genesis=devgen.car --genesis-template=localnet.json --bootstrap=false
     tty: true
   - name: miner
-    image: ghcr.io/jimpick/lotus-fvm-localnet-ready@sha256:f181f34189fd9b4ec7e3690ceca2c7d3d620a3fa9c9a06fb766049742d58b161
+    image: ghcr.io/jimpick/lotus-fvm-localnet-lite@latest
     command: [ bash, -c ]
     args:
       - |
@@ -89,6 +80,7 @@ spec:
 This just uses ephemeral storage on the root overlay filesystem, which will be lost after
 the pod is terminated.
 
+
 # Example Actors
 
 These should work with this localnet.
@@ -96,6 +88,38 @@ These should work with this localnet.
 * https://github.com/raulk/fil-hello-world-actor
 * https://github.com/jimpick/fvm-hanoi-actor-1
 
+# Building Images
+
+Because the Docker image takes a very long time to build, it is built in
+a number of stages using GitHub Actions.
+
+## base
+
+This image has a full Ubuntu development setup with Go, Rust and a built version of Lotus
+along with the source code. Heavy!
+
+The version of Lotus which is built is checked into the top level of this repo as a git submodule.
+
+* Action: https://github.com/jimpick/lotus-fvm-localnet/actions/workflows/container-base.yml
+* Dockerfile: https://github.com/jimpick/lotus-fvm-localnet/blob/main/Dockerfile-base
+* Package: https://github.com/jimpick/lotus-fvm-localnet/pkgs/container/lotus-fvm-localnet-base
+
+## ready
+
+This image adds a bootstrapped chain and proof parameter files to the "base" image. Heavy!
+
+* Action: https://github.com/jimpick/lotus-fvm-localnet/actions/workflows/container-ready.yml
+* Dockerfile: https://github.com/jimpick/lotus-fvm-localnet/blob/main/Dockerfile-ready
+* Package: https://github.com/jimpick/lotus-fvm-localnet/pkgs/container/lotus-fvm-localnet-ready
+
+## lite
+
+This image has a non-developer install of Ubuntu plus the compiled Lotus binaries
+and the bootstrapped chain and proof parameter files from the "ready" image.
+
+* Action: https://github.com/jimpick/lotus-fvm-localnet/actions/workflows/container-lite.yml
+* Dockerfile: https://github.com/jimpick/lotus-fvm-localnet/blob/main/Dockerfile-lite
+* Package: https://github.com/jimpick/lotus-fvm-localnet/pkgs/container/lotus-fvm-localnet-lite
 
 # License
 

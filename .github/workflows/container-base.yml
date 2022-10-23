@@ -7,10 +7,6 @@ on:
       - Dockerfile-base
       - lotus
 
-permissions:
-  contents: write
-  pull-requests: write
-
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: jimpick/lotus-fvm-localnet-base

@@ -21,6 +21,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      actions: write
     outputs:
       digest: ${{ steps.fetch_digest.outputs.digest }}
 

@@ -15,7 +15,7 @@ jobs:
   run-build-and-push-oci-image:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
     outputs:
       digest: ${{ steps.fetch_digest.outputs.digest }}

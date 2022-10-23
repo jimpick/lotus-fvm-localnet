@@ -52,11 +52,11 @@ jobs:
           echo $DIGEST
           echo "digest=$DIGEST" >> $GITHUB_ENV
 
-      - name: Update -ready image
+      - name: Update Dockerfile-ready
         run: |
           perl -pi -e "s#^FROM ghcr.io/jimpick/lotus-fvm-localnet-base.*#FROM ghcr.io/jimpick/lotus-fvm-localnet-base\@${{ env.digest }}#" Dockerfile-ready
 
-      - name: Add CSV files to git and commit
+      - name: Commit and push changes to Dockerfile-ready
         run: |
           set -euo pipefail
           set -x

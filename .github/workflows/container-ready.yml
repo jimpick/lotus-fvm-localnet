@@ -5,6 +5,9 @@ on:
     paths:
       - .github/workflows/container-ready.yml
       - Dockerfile-ready
+  repository_dispatch:
+    types: [manual-run-ready]
+  workflow_dispatch: {}
 
 env:
   REGISTRY: ghcr.io

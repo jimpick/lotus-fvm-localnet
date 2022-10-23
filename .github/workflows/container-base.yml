@@ -6,6 +6,10 @@ on:
       - .github/workflows/container-base.yml
       - Dockerfile-base
       - lotus
+      - go-jsonrpc
+  repository_dispatch:
+    types: [manual-run-base]
+  workflow_dispatch: {}
 
 env:
   REGISTRY: ghcr.io

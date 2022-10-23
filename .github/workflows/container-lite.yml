@@ -5,6 +5,9 @@ on:
     paths:
       - .github/workflows/container-lite.yml
       - Dockerfile-lite
+  repository_dispatch:
+    types: [manual-run-lite]
+  workflow_dispatch: {}
 
 env:
   REGISTRY: ghcr.io

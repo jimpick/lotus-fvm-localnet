@@ -52,6 +52,24 @@ jobs:
           echo $DIGEST
           echo "digest=$DIGEST" >> $GITHUB_ENV
 
+      - name: Update -ready image
+        run: |
+          perl -pi -e "s#^FROM ghcr.io/jimpick/lotus-fvm-localnet-base.*#FROM ghcr.io/jimpick/lotus-fvm-localnet-base\@${env.digest}#" Dockerfile-ready
+
+      - name: Add CSV files to git and commit
+        run: |
+          set -euo pipefail
+          set -x
+          git config --global user.name 'update-image-hash'
+          git config --global user.email 'nobody@jimpick.com'
+          git status
+          git add Dockerfile-ready
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m 'Update lotus-fvm-localnet-base from action'
+            git pull
+            git push
+          fi
+
       - name: Outputs
         run: |
           echo digest: ${{ env.digest }}

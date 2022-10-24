@@ -11,7 +11,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: jimpick/lotus-fvm-localnet-ubuntu-dev
+  IMAGE_NAME: ${{ env.GITHUB_REPOSITORY }}-ubuntu-dev
 
 jobs:
   run-build-and-push-oci-image:
@@ -53,27 +53,27 @@ jobs:
       - name: Update Dockerfile-base
         run: |
           echo Digest: ${{ steps.build.outputs.digest }}
-          #perl -pi -e "s#^FROM ghcr.io/jimpick/lotus-fvm-localnet-base.*#FROM ghcr.io/jimpick/lotus-fvm-localnet-base\@${{ steps.build.outputs.digest }}#" Dockerfile-ready
+          perl -pi -e "s#^FROM .*#FROM ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\@${{ steps.build.outputs.digest }}#" Dockerfile-base
 
-#      - name: Commit and push changes to Dockerfile-base
-#        run: |
-#          set -euo pipefail
-#          set -x
-#          git config --global user.name 'update-image-hash'
-#          git config --global user.email 'nobody@jimpick.com'
-#          git status
-#          git add Dockerfile-ready
-#          if [ -n "$(git status --porcelain)" ]; then
-#            git commit -m 'Update lotus-fvm-localnet-ubuntu-dev from action'
-#            git pull
-#            git push
-#          fi
-#
-#      - name: Trigger -base build
-#        run: |
-#          curl \
-#            -X POST \
-#            -H "Accept: application/vnd.github+json" \
-#            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-#            https://api.github.com/repos/jimpick/lotus-fvm-localnet/dispatches \
-#            -d '{"event_type":"manual-run-base"}'
+      - name: Commit and push changes to Dockerfile-base
+        run: |
+          set -euo pipefail
+          set -x
+          git config --global user.name 'update-image-hash'
+          git config --global user.email 'nobody@jimpick.com'
+          git status
+          git add Dockerfile-base
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m 'Update lotus-fvm-localnet-ubuntu-dev from action'
+            git pull
+            git push
+          fi
+
+      - name: Trigger -base build
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ env.GITHUB_REPOSITORY }}/dispatches \
+            -d '{"event_type":"manual-run-base"}'

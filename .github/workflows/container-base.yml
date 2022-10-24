@@ -13,7 +13,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: jimpick/lotus-fvm-localnet-base
+  IMAGE_NAME: ${{ github.repository }}-base
 
 jobs:
   run-build-and-push-oci-image:
@@ -55,7 +55,7 @@ jobs:
       - name: Update Dockerfile-ready
         run: |
           echo Digest: ${{ steps.build.outputs.digest }}
-          perl -pi -e "s#^FROM ghcr.io/jimpick/lotus-fvm-localnet-base.*#FROM ghcr.io/jimpick/lotus-fvm-localnet-base\@${{ steps.build.outputs.digest }}#" Dockerfile-ready
+          perl -pi -e "s#^FROM .*#FROM ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\@${{ steps.build.outputs.digest }}#" Dockerfile-ready
 
       - name: Commit and push changes to Dockerfile-ready
         run: |
@@ -77,5 +77,5 @@ jobs:
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/jimpick/lotus-fvm-localnet/dispatches \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
             -d '{"event_type":"manual-run-ready"}'

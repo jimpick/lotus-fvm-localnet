@@ -42,6 +42,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
+        id: build
         uses: docker/build-push-action@v3.2.0
         with:
           context: .
@@ -70,9 +71,12 @@ jobs:
 #          echo $DIGEST
 #          echo "digest=$DIGEST" >> $GITHUB_ENV
 #
-#      - name: Update Dockerfile-ready
-#        run: |
-#          perl -pi -e "s#^FROM ghcr.io/jimpick/lotus-fvm-localnet-base.*#FROM ghcr.io/jimpick/lotus-fvm-localnet-base\@${{ env.digest }}#" Dockerfile-ready
+
+      - name: Update Dockerfile-ready
+        run: |
+          echo Digest: ${{ steps.build.outputs.digest }}
+          perl -pi -e "s#^FROM ghcr.io/jimpick/lotus-fvm-localnet-base.*#FROM ghcr.io/jimpick/lotus-fvm-localnet-base\@${{ steps.build.outputs.digest }}#" Dockerfile-ready
+
 #
 #      - name: Commit and push changes to Dockerfile-ready
 #        run: |

@@ -1,0 +1,39 @@
+# syntax=docker/dockerfile:1.4
+
+# See: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md
+
+FROM ubuntu
+
+RUN useradd ubuntu
+
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+
+RUN apt install -y mesa-opencl-icd ocl-icd-opencl-dev gcc git bzr jq pkg-config curl clang build-essential hwloc libhwloc-dev wget
+RUN apt install -y python3 vim less tmux psmisc htop rsync unzip
+
+RUN apt upgrade -y
+
+RUN wget https://go.dev/dl/go1.18.1.linux-amd64.tar.gz
+RUN tar -C /usr/local -xf go*.tar.gz
+RUN rm -f go*.tar.gz
+
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+WORKDIR /home/ubuntu
+COPY . .
+
+RUN chown -R ubuntu. /home/ubuntu
+USER ubuntu
+
+# https://stackoverflow.com/questions/49676490/when-installing-rust-toolchain-in-docker-bash-source-command-doesnt-work
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+
+RUN echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
+
+ENV PATH="/home/ubuntu/.cargo/bin:${PATH}"
+
+WORKDIR /home/ubuntu/lotus
+
+ENV PATH="/home/ubuntu/lotus:${PATH}"
+

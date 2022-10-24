@@ -147,10 +147,17 @@ the pod is terminated.
 Because the Docker image takes a very long time to build, it is built in
 a number of stages using GitHub Actions.
 
+## ubuntu-dev
+
+This image has a full Ubuntu development setup with Go and Rust.
+
+* Action: https://github.com/jimpick/lotus-fvm-localnet/actions/workflows/container-ubuntu-dev.yml
+* Dockerfile: https://github.com/jimpick/lotus-fvm-localnet/blob/main/Dockerfile-ubuntu-dev
+* Package: https://github.com/jimpick/lotus-fvm-localnet/pkgs/container/lotus-fvm-localnet-ubuntu-dev
+
 ## base
 
-This image has a full Ubuntu development setup with Go, Rust and a built version of Lotus
-along with the source code. Heavy!
+This adds a built version of Lotus along with the source code. Heavy!
 
 The version of Lotus which is built is checked into the top level of this repo as a git submodule.
 

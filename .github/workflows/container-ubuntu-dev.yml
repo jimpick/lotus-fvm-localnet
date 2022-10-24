@@ -11,7 +11,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ env.GITHUB_REPOSITORY }}-ubuntu-dev
+  IMAGE_NAME: ${{ GITHUB_REPOSITORY }}-ubuntu-dev
 
 jobs:
   run-build-and-push-oci-image:

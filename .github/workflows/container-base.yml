@@ -31,6 +31,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2.2.1
+
       - name: Log in to the Container registry
         uses: docker/login-action@v2.1.0
         with:
@@ -38,53 +41,63 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: build-base
-        run: make build-base
+      - name: Build and push
+        uses: docker/build-push-action@v3.2.0
+        with:
+          context: .
+          file: Dockerfile-base
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Tag Docker image
-        run: docker image tag ${{ env.IMAGE_NAME }} ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}
-
-      - name: Push Docker image
-        run: docker image push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Fetch digest
-        id: fetch_digest
-        run: |
-          # https://github.community/t/how-to-check-if-a-container-image-exists-on-ghcr/154836
-          TOKEN=$(curl -s https://ghcr.io/token\?scope\="repository:${{ env.IMAGE_NAME }}:pull" | jq -r .token)
-          # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest
-          DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest | sed -n 's/^docker-content-digest: //p')
-          echo $DIGEST
-          echo "digest=$DIGEST" >> $GITHUB_ENV
-
-      - name: Update Dockerfile-ready
-        run: |
-          perl -pi -e "s#^FROM ghcr.io/jimpick/lotus-fvm-localnet-base.*#FROM ghcr.io/jimpick/lotus-fvm-localnet-base\@${{ env.digest }}#" Dockerfile-ready
-
-      - name: Commit and push changes to Dockerfile-ready
-        run: |
-          set -euo pipefail
-          set -x
-          git config --global user.name 'update-image-hash'
-          git config --global user.email 'nobody@jimpick.com'
-          git status
-          git add Dockerfile-ready
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -m 'Update lotus-fvm-localnet-base from action'
-            git pull
-            git push
-          fi
-
-      - name: Trigger -ready build
-        run: |
-          curl \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/jimpick/lotus-fvm-localnet/dispatches \
-            -d '{"event_type":"manual-run-ready"}'
-
-      - name: Outputs
-        run: |
-          echo digest: ${{ env.digest }}
-
+#      - name: build-base
+#        run: make build-base
+#
+#      - name: Tag Docker image
+#        run: docker image tag ${{ env.IMAGE_NAME }} ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}
+#
+#      - name: Push Docker image
+#        run: docker image push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+#
+#      - name: Fetch digest
+#        id: fetch_digest
+#        run: |
+#          # https://github.community/t/how-to-check-if-a-container-image-exists-on-ghcr/154836
+#          TOKEN=$(curl -s https://ghcr.io/token\?scope\="repository:${{ env.IMAGE_NAME }}:pull" | jq -r .token)
+#          # curl -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest
+#          DIGEST=$(curl -s -I -H "Authorization: Bearer $TOKEN" https://ghcr.io/v2/${{ env.IMAGE_NAME }}/manifests/latest | sed -n 's/^docker-content-digest: //p')
+#          echo $DIGEST
+#          echo "digest=$DIGEST" >> $GITHUB_ENV
+#
+#      - name: Update Dockerfile-ready
+#        run: |
+#          perl -pi -e "s#^FROM ghcr.io/jimpick/lotus-fvm-localnet-base.*#FROM ghcr.io/jimpick/lotus-fvm-localnet-base\@${{ env.digest }}#" Dockerfile-ready
+#
+#      - name: Commit and push changes to Dockerfile-ready
+#        run: |
+#          set -euo pipefail
+#          set -x
+#          git config --global user.name 'update-image-hash'
+#          git config --global user.email 'nobody@jimpick.com'
+#          git status
+#          git add Dockerfile-ready
+#          if [ -n "$(git status --porcelain)" ]; then
+#            git commit -m 'Update lotus-fvm-localnet-base from action'
+#            git pull
+#            git push
+#          fi
+#
+#      - name: Trigger -ready build
+#        run: |
+#          curl \
+#            -X POST \
+#            -H "Accept: application/vnd.github+json" \
+#            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+#            https://api.github.com/repos/jimpick/lotus-fvm-localnet/dispatches \
+#            -d '{"event_type":"manual-run-ready"}'
+#
+#      - name: Outputs
+#        run: |
+#          echo digest: ${{ env.digest }}
+#

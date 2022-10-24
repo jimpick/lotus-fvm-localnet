@@ -1,6 +1,8 @@
 lotus-fvm-localnet
 ===
 
+[![lotus-fvm-localnet-lite](https://github.com/jimpick/lotus-fvm-localnet/actions/workflows/container-lite.yml/badge.svg)](https://github.com/jimpick/lotus-fvm-localnet/actions/workflows/container-lite.yml)
+
 Builds a container image with a development branch of Lotus (experimental/fvm-m2)
 for running a localnet in a container for FVM experimentation.
 

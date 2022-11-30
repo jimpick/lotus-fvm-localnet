@@ -44,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           context: .
-          file: Dockerfile-lite
+          file: Dockerfile-python
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           cache-from: type=gha

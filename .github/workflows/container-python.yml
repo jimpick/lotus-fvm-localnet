@@ -1,4 +1,4 @@
-name: lotus-fvm-localnet-lite
+name: lotus-fvm-localnet-python
 
 on:
   push:

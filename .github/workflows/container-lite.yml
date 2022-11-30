@@ -53,7 +53,7 @@ jobs:
       - name: Update Dockerfile-python
         run: |
           echo Digest: ${{ steps.build.outputs.digest }}
-          perl -pi -e "s#^FROM .*#FROM ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\@${{ steps.build.outputs.digest }}" Dockerfile-python
+          perl -pi -e "s#^FROM .*#FROM ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\@${{ steps.build.outputs.digest }}#" Dockerfile-python
 
       - name: Commit and push changes to Dockerfile-python
         run: |

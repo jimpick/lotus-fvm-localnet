@@ -184,6 +184,14 @@ and the bootstrapped chain and proof parameter files from the "ready" image.
 * Dockerfile: https://github.com/jimpick/lotus-fvm-localnet/blob/main/Dockerfile-lite
 * Package: https://github.com/jimpick/lotus-fvm-localnet/pkgs/container/lotus-fvm-localnet-lite
 
+## python
+
+This image is the "lite" image plus python3.
+
+* Action: https://github.com/jimpick/lotus-fvm-localnet/actions/workflows/container-python.yml
+* Dockerfile: https://github.com/jimpick/lotus-fvm-localnet/blob/main/Dockerfile-python
+* Package: https://github.com/jimpick/lotus-fvm-localnet/pkgs/container/lotus-fvm-localnet-python
+
 # License
 
 Apache 2 or MIT

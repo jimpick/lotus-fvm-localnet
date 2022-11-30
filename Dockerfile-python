@@ -1,0 +1,13 @@
+# syntax=docker/dockerfile:1.4
+
+FROM ghcr.io/jimpick/lotus-fvm-localnet-lite@sha256:1a9a33d6be8a3707035da8ab61a551c56d761ca6caafa574237f7a0a2d99bc64
+
+USER root
+
+RUN apt-get update
+RUN apt install -y python3
+
+WORKDIR /home/ubuntu
+
+USER ubuntu
+

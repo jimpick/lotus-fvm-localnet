@@ -50,3 +50,30 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Update Dockerfile-python
+        run: |
+          echo Digest: ${{ steps.build.outputs.digest }}
+          perl -pi -e "s#^FROM .*#FROM ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\@${{ steps.build.outputs.digest }}" Dockerfile-python
+
+      - name: Commit and push changes to Dockerfile-python
+        run: |
+          set -euo pipefail
+          set -x
+          git config --global user.name 'update-image-hash'
+          git config --global user.email 'nobody@jimpick.com'
+          git status
+          git add Dockerfile-python
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m 'Update lotus-fvm-localnet-lite from action'
+            git pull
+            git push
+          fi
+
+      - name: Trigger -python build
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type":"manual-run-python"}'

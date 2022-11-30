@@ -14,6 +14,9 @@ build-ready:
 build-lite:
 	DOCKER_BUILDKIT=1 docker build -f Dockerfile-lite --progress=plain -t jimpick/lotus-fvm-localnet-lite .
 
+build-python:
+	DOCKER_BUILDKIT=1 docker build -f Dockerfile-python --progress=plain -t jimpick/lotus-fvm-localnet-python .
+
 run-base:
 	-docker stop localnet
 	-docker rm localnet
@@ -33,3 +36,8 @@ run-lite:
 	-docker stop localnet
 	-docker rm localnet
 	docker run -it --entrypoint /bin/bash --name localnet jimpick/lotus-fvm-localnet-lite
+
+run-python:
+	-docker stop localnet
+	-docker rm localnet
+	docker run -it --entrypoint /bin/bash --name localnet jimpick/lotus-fvm-localnet-python

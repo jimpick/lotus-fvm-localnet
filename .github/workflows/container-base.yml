@@ -3,7 +3,7 @@ name: lotus-fvm-localnet-base
 on:
   push:
     branches:
-      - main
+      - "jim/512m"
     paths:
       - .github/workflows/container-base.yml
       - Dockerfile-base
@@ -80,4 +80,4 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/${{ github.repository }}/dispatches \
-            -d '{"event_type":"manual-run-ready"}'
+            -d '{"event_type":"manual-run-ready-512m"}'

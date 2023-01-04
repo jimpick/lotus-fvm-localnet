@@ -2,6 +2,8 @@ name: lotus-fvm-localnet-ready
 
 on:
   push:
+    branches:
+      - main
     paths:
       - .github/workflows/container-ready.yml
       - Dockerfile-ready

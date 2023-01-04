@@ -2,6 +2,8 @@ name: lotus-fvm-localnet-base
 
 on:
   push:
+    branches:
+      - main
     paths:
       - .github/workflows/container-base.yml
       - Dockerfile-base

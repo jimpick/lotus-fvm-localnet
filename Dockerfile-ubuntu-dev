@@ -14,7 +14,7 @@ RUN apt install -y python3 vim less tmux psmisc htop rsync unzip
 
 RUN apt upgrade -y
 
-RUN wget https://go.dev/dl/go1.18.1.linux-amd64.tar.gz
+RUN wget https://go.dev/dl/go1.19.4.linux-amd64.tar.gz
 RUN tar -C /usr/local -xf go*.tar.gz
 RUN rm -f go*.tar.gz
 

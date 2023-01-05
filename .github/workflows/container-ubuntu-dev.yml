@@ -3,12 +3,12 @@ name: lotus-fvm-localnet-ubuntu-dev
 on:
   push:
     branches:
-      - main
+      - "jim/512m"
     paths:
       - .github/workflows/container-ubuntu-dev.yml
       - Dockerfile-ubuntu-dev
-  repository_dispatch:
-    types: [manual-run-ubuntu-dev]
+  #repository_dispatch:
+  #  types: [manual-run-ubuntu-dev]
   workflow_dispatch: {}
 
 env:
@@ -71,11 +71,11 @@ jobs:
             git push
           fi
 
-      - name: Trigger -base build
-        run: |
-          curl \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/dispatches \
-            -d '{"event_type":"manual-run-base"}'
+      #- name: Trigger -base build
+      #  run: |
+      #    curl \
+      #      -X POST \
+      #      -H "Accept: application/vnd.github+json" \
+      #      -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+      #      https://api.github.com/repos/${{ github.repository }}/dispatches \
+      #      -d '{"event_type":"manual-run-base-512m"}'

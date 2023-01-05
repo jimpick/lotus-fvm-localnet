@@ -18,8 +18,7 @@ RUN echo 'replace	github.com/filecoin-project/go-jsonrpc  => ../go-jsonrpc' >> g
 
 # Build Lotus
 
-RUN grep '512m' Makefile
-#RUN make clean 512m
+RUN make clean 512m
 
 # Fetch params
 

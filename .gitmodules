@@ -1,6 +1,6 @@
 [submodule "lotus"]
 	path = lotus
-	url = https://github.com/filecoin-project/lotus.git
+	url = https://github.com/jimpick/lotus.git
 	branch = experimental/fvm-m2
 [submodule "go-jsonrpc"]
 	path = go-jsonrpc

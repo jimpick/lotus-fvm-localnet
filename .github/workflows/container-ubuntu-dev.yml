@@ -48,7 +48,7 @@ jobs:
           context: .
           file: Dockerfile-ubuntu-dev
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:512m
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -67,7 +67,7 @@ jobs:
           git add Dockerfile-base
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m 'Update lotus-fvm-localnet-ubuntu-dev from action'
-            git pull
+            #git pull
             git push
           fi
 

@@ -37,3 +37,4 @@ WORKDIR /home/ubuntu/lotus
 
 ENV PATH="/home/ubuntu/lotus:${PATH}"
 
+

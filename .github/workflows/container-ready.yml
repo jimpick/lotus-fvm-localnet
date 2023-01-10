@@ -67,7 +67,7 @@ jobs:
           git add Dockerfile-lite
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m 'Update lotus-fvm-localnet-ready from action'
-            git pull
+            #git pull
             git push
           fi
 

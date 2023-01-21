@@ -21,6 +21,7 @@ RUN rm -f go*.tar.gz
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 WORKDIR /home/ubuntu
+RUN chown -R ubuntu. /home/ubuntu
 
 USER ubuntu
 

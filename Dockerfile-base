@@ -14,9 +14,9 @@ ENV CGO_CFLAGS="-D__BLST_PORTABLE__"
 
 # Copy lotus and go-jsonrpc
 WORKDIR /home/ubuntu
+COPY --chown=ubuntu:ubuntu .git .git
 COPY --chown=ubuntu:ubuntu lotus lotus
 COPY --chown=ubuntu:ubuntu go-jsonrpc go-jsonrpc
-RUN ls -al
 
 WORKDIR /home/ubuntu/lotus
 
@@ -36,4 +36,5 @@ RUN ./lotus fetch-params 2048
 
 RUN mkdir -p $LOTUS_PATH
 RUN ./lotus config default > $LOTUS_PATH/config.toml
+RUN sed -i 's,#EnableEthRPC = false,EnableEthRPC = true,' $LOTUS_PATH/config.toml
 ## FIXME: Set EnableEthRPC to true

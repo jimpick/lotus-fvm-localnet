@@ -12,6 +12,14 @@ ENV LOTUS_SKIP_GENESIS_CHECK=_yes_
 ENV CGO_CFLAGS_ALLOW="-D__BLST_PORTABLE__"
 ENV CGO_CFLAGS="-D__BLST_PORTABLE__"
 
+# Copy lotus and go-jsonrpc
+WORKDIR /home/ubuntu
+COPY --chown=ubuntu:ubuntu lotus lotus
+COPY --chown=ubuntu:ubuntu go-jsonrpc go-jsonrpc
+RUN ls -al
+
+WORKDIR /home/ubuntu/lotus
+
 # Patch go.mod to use go-jsonrpc with extra API request logging
 
 RUN echo 'replace	github.com/filecoin-project/go-jsonrpc  => ../go-jsonrpc' >> go.mod

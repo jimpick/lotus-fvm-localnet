@@ -41,3 +41,7 @@ run-python:
 	-docker stop localnet
 	-docker rm localnet
 	docker run -it --entrypoint /bin/bash --name localnet jimpick/lotus-fvm-localnet-python
+
+clear-cache:
+	docker builder prune -a -f
+

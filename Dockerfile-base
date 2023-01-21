@@ -6,8 +6,8 @@ FROM ghcr.io/jimpick/lotus-fvm-localnet-ubuntu-dev@sha256:ea619b8cda4f3e173c0fc1
 
 # https://lotus.filecoin.io/developers/local-network/
 
-ENV LOTUS_PATH="~/.lotus-local-net"
-ENV LOTUS_MINER_PATH="~/.lotus-miner-local-net"
+ENV LOTUS_PATH="/home/ubuntu/.lotus-local-net"
+ENV LOTUS_MINER_PATH="/home/ubuntu/.lotus-miner-local-net"
 ENV LOTUS_SKIP_GENESIS_CHECK=_yes_
 ENV CGO_CFLAGS_ALLOW="-D__BLST_PORTABLE__"
 ENV CGO_CFLAGS="-D__BLST_PORTABLE__"
@@ -23,3 +23,9 @@ RUN make clean 2k
 # Fetch params
 
 RUN ./lotus fetch-params 2048
+
+# Node config file
+
+RUN mkdir -p $LOTUS_PATH
+RUN ./lotus config default > $LOTUS_PATH/config.toml
+## FIXME: Set EnableEthRPC to true

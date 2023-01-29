@@ -17,6 +17,9 @@ WORKDIR /home/ubuntu
 COPY --chown=ubuntu:ubuntu .git .git
 COPY --chown=ubuntu:ubuntu lotus lotus
 COPY --chown=ubuntu:ubuntu go-jsonrpc go-jsonrpc
+COPY --chown=ubuntu:ubuntu patch-lotus.sh patch-lotus.sh
+
+RUN ./patch-lotus.sh
 
 WORKDIR /home/ubuntu/lotus
 

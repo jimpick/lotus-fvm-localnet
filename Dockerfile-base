@@ -34,6 +34,7 @@ RUN make clean 2k
 # Fetch params
 
 RUN ./lotus fetch-params 2048
+RUN chown -R ubuntu.ubuntu /var/tmp
 
 # Node config file
 

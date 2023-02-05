@@ -36,6 +36,7 @@ COPY --from=build /var/tmp/filecoin-proof-parameters /var/tmp/filecoin-proof-par
 COPY --from=build /var/tmp/filecoin-parents /var/tmp/filecoin-proof-parents
 
 RUN chown -R ubuntu. /home/ubuntu
+RUN chown -R ubuntu. /var/tmp
 USER ubuntu
 
 ENV LOTUS_PATH="~/.lotus-local-net"

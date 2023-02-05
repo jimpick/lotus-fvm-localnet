@@ -2,7 +2,7 @@
 
 # See: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md
 
-FROM ghcr.io/jimpick/lotus-fvm-localnet-base@sha256:2f64d06752a6531cb0770eb5b95d4f28e2d5d8e5299027b4988e31b08265dc5e
+FROM ghcr.io/jimpick/lotus-fvm-localnet-base@sha256:51bbb47b8722ee95542ab5e7da2ff0e9a1898503eb830ee8228527f31851030e
 
 # Setup Lotus - https://lotus.filecoin.io/developers/local-network/
 

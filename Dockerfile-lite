@@ -9,6 +9,8 @@ USER root
 WORKDIR /home/ubuntu/lotus
 
 RUN make install
+RUN cp ./lotus-seed /usr/local/bin
+RUN cp ./lotus-shed /usr/local/bin
 
 # Copy to new image
 

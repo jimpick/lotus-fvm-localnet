@@ -30,6 +30,7 @@ RUN echo 'replace	github.com/filecoin-project/go-jsonrpc  => ../go-jsonrpc' >> g
 # Build Lotus
 
 RUN make clean 2k
+RUN make lotus-shed
 
 # Fetch params
 

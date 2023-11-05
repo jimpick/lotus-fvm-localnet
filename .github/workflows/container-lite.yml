@@ -1,7 +1,5 @@
 name: lotus-fvm-localnet-lite
 
-runs-on: self-hosted
-
 on:
   push:
     branches:
@@ -19,7 +17,8 @@ env:
 
 jobs:
   run-build-and-push-oci-image:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+
     permissions:
       contents: write
       packages: write

@@ -1,5 +1,7 @@
 name: lotus-fvm-localnet-lite
 
+runs-on: self-hosted
+
 on:
   push:
     branches:

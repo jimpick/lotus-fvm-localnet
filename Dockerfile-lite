@@ -2,7 +2,7 @@
 
 # See: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/syntax.md
 
-FROM ghcr.io/jimpick/lotus-fvm-localnet-ready@sha256:08a25a370168f7273856856c92c2cace5872d0e54f87fc65489dccd67a562276 as build
+FROM ghcr.io/jimpick/lotus-fvm-localnet-ready@sha256:46355d76ffc486ac8a7a81b4fd8e47d9c3fadeae9ea2e5a3bca6318527f50a9e as build
 
 USER root
 
